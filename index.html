@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Adoption Success Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.4em;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .pillar-framework {
+            grid-column: 1 / -1;
+        }
+
+        .pillar {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .pillar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .pillar h3 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .pillar-icon {
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        .pillar.data { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .pillar.human { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .pillar.measure { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+
+        .use-case-evaluator {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .evaluation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .evaluation-item {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+        }
+
+        .slider-container {
+            margin: 15px 0;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        .score-display {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .result-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #28a745;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-card.warning {
+            border-left-color: #ffc107;
+        }
+
+        .result-card.danger {
+            border-left-color: #dc3545;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .framework-details {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .framework-details.show {
+            display: block;
+        }
+
+        .implementation-roadmap {
+            margin-top: 30px;
+        }
+
+        .roadmap-phase {
+            background: white;
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .roadmap-phase:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .export-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .evaluation-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 AI Adoption Success Portal</h1>
+            <p>Transform AI Ideas into Measurable Business Impact</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('framework')">📊 Framework Overview</button>
+            <button class="tab" onclick="showTab('evaluator')">🎯 Use Case Evaluator</button>
+            <button class="tab" onclick="showTab('roadmap')">🛣️ Implementation Roadmap</button>
+            <button class="tab" onclick="showTab('dashboard')">📈 Success Dashboard</button>
+        </div>
+
+        <div id="framework" class="tab-content active">
+            <div class="card pillar-framework">
+                <h2>🏛️ The Three-Pillar Success Framework</h2>
+                <p style="font-size: 1.2em; margin: 20px 0; color: #666;">
+                    Most organizations approach AI like tourists in a foreign city—no map, no plan. 
+                    Here's your scientific framework for AI success that's proven to work.
+                </p>
+
+                <div class="pillar data" onclick="toggleDetails('data-details')">
+                    <h3><span class="pillar-icon">🗃️</span>Pillar 1: Data Foundation Test</h3>
+                    <p>Do we have rich, abundant data? Great AI needs thousands of examples, clear patterns, and data that refreshes regularly.</p>
+                    <div id="data-details" class="framework-details">
+                        <h4>Success Example: Netflix</h4>
+                        <p>230 million users generate billions of viewing decisions daily. Rich behavioral data with clear patterns and constant refresh.</p>
+                        <h4>Key Questions:</h4>
+                        <ul>
+                            <li>Do we have thousands of examples of the problem we're solving?</li>
+                            <li>Is our data clean, labeled, and accessible?</li>
+                            <li>Does our data refresh regularly with new patterns?</li>
+                            <li>Can we identify clear correlations in our dataset?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pillar human" onclick="toggleDetails('human-details')">
+                    <h3><span class="pillar-icon">🤝</span>Pillar 2: Human Amplification Principle</h3>
+                    <p>The best AI doesn't replace humans—it eliminates drudgery while amplifying decision-making and productivity.</p>
+                    <div id="human-details" class="framework-details">
+                        <h4>Success Example: Stanford Radiology</h4>
+                        <p>AI pre-screens mammograms, reducing reading time by 88% while improving cancer detection by 11%. AI handles routine screening; doctors focus on complex cases.</p>
+                        <h4>Key Questions:</h4>
+                        <ul>
+                            <li>What repetitive, rule-based tasks slow down our team?</li>
+                            <li>Where do humans make errors due to fatigue or volume?</li>
+                            <li>How can AI free up time for high-value human judgment?</li>
+                            <li>What decisions need human expertise that AI should support?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pillar measure" onclick="toggleDetails('measure-details')">
+                    <h3><span class="pillar-icon">📏</span>Pillar 3: Measurability Standard</h3>
+                    <p>If you can't measure it, you can't prove it worked. Success requires specific, quantifiable metrics.</p>
+                    <div id="measure-details" class="framework-details">
+                        <h4>Success Example: UPS ORION</h4>
+                        <p>Routing system saves 100 million miles annually—that's $50 million in measurable fuel savings. Specific, quantifiable, impossible to argue with.</p>
+                        <h4>Key Questions:</h4>
+                        <ul>
+                            <li>What specific metrics will prove success?</li>
+                            <li>Can we measure before/after performance?</li>
+                            <li>How will we track ROI and business impact?</li>
+                            <li>What are our success thresholds and failure criteria?</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="evaluator" class="tab-content">
+            <div class="use-case-evaluator">
+                <h2>🎯 AI Use Case Evaluator</h2>
+                <p style="font-size: 1.1em; margin-bottom: 30px; color: #666;">
+                    Score your potential use cases on all three dimensions. Only pursue opportunities scoring 7+ in all areas.
+                </p>
+
+                <div class="evaluation-grid">
+                    <div class="evaluation-item">
+                        <h3>🗃️ Data Foundation Score</h3>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="dataScore" oninput="updateScores()">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9em; color: #666;">
+                                <span>Poor Data</span>
+                                <span>Rich Data</span>
+                            </div>
+                        </div>
+                        <div id="dataScoreDisplay" class="score-display">5/10</div>
+                        <div id="dataFeedback" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            Rate the richness and quality of your available data
+                        </div>
+                    </div>
+
+                    <div class="evaluation-item">
+                        <h3>🤝 Human Pain Point Severity</h3>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="humanScore" oninput="updateScores()">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9em; color: #666;">
+                                <span>Minor Issue</span>
+                                <span>Critical Pain</span>
+                            </div>
+                        </div>
+                        <div id="humanScoreDisplay" class="score-display">5/10</div>
+                        <div id="humanFeedback" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            Rate how much this problem impacts human productivity
+                        </div>
+                    </div>
+
+                    <div class="evaluation-item">
+                        <h3>📏 Measurement Clarity</h3>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="measureScore" oninput="updateScores()">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.9em; color: #666;">
+                                <span>Vague Benefits</span>
+                                <span>Clear Metrics</span>
+                            </div>
+                        </div>
+                        <div id="measureScoreDisplay" class="score-display">5/10</div>
+                        <div id="measureFeedback" style="margin-top: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            Rate how clearly you can measure success
+                        </div>
+                    </div>
+                </div>
+
+                <div id="overallAssessment" class="card" style="text-align: center; margin-top: 30px;">
+                    <h3>Overall Assessment</h3>
+                    <div id="totalScore" style="font-size: 3em; font-weight: bold; color: #667eea; margin: 20px 0;">15/30</div>
+                    <div id="recommendation" style="font-size: 1.2em; padding: 20px; border-radius: 8px; background: #f8f9fa;">
+                        Complete your evaluation to get recommendations
+                    </div>
+                    <button class="btn" onclick="saveEvaluation()" style="margin-top: 20px;">Save Evaluation</button>
+                    <button class="btn btn-secondary" onclick="exportResults()">Export Results</button>
+                </div>
+
+                <div class="card" style="margin-top: 30px;">
+                    <h3>📝 Use Case Details</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Use Case Name:</label>
+                            <input type="text" id="useCaseName" placeholder="e.g., Customer Support Automation" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px;">
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Department:</label>
+                            <select id="department" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px;">
+                                <option>Select Department</option>
+                                <option>Customer Service</option>
+                                <option>Sales</option>
+                                <option>Marketing</option>
+                                <option>Operations</option>
+                                <option>Finance</option>
+                                <option>HR</option>
+                                <option>IT</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Problem Description:</label>
+                            <textarea id="problemDescription" rows="4" placeholder="Describe the specific problem this AI solution will solve..." style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; resize: vertical;"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="roadmap" class="tab-content">
+            <div class="card implementation-roadmap">
+                <h2>🛣️ Implementation Roadmap</h2>
+                <p style="font-size: 1.1em; margin-bottom: 30px; color: #666;">
+                    Your proven path from AI idea to business impact. Follow this roadmap for systematic success.
+                </p>
+
+                <div class="roadmap-phase" onclick="togglePhase('phase1')">
+                    <h3>📋 Phase 1: Strategic Assessment (Month 1)</h3>
+                    <p>Validate your use case against the Three-Pillar Framework</p>
+                    <div id="phase1" class="framework-details">
+                        <h4>Key Activities:</h4>
+                        <ul>
+                            <li>Complete comprehensive use case evaluation</li>
+                            <li>Assess data availability and quality</li>
+                            <li>Identify stakeholders and champions</li>
+                            <li>Define success metrics and KPIs</li>
+                            <li>Conduct feasibility analysis</li>
+                        </ul>
+                        <h4>Deliverables:</h4>
+                        <ul>
+                            <li>Three-Pillar Assessment Report</li>
+                            <li>Stakeholder Alignment Document</li>
+                            <li>Success Metrics Framework</li>
+                            <li>Go/No-Go Decision</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="roadmap-phase" onclick="togglePhase('phase2')">
+                    <h3>🔧 Phase 2: Rapid Prototyping (Months 2-3)</h3>
+                    <p>Build and test minimum viable AI solution</p>
+                    <div id="phase2" class="framework-details">
+                        <h4>Key Activities:</h4>
+                        <ul>
+                            <li>Data preparation and cleaning</li>
+                            <li>Model development and training</li>
+                            <li>Create basic user interface</li>
+                            <li>Conduct initial testing</li>
+                            <li>Gather user feedback</li>
+                        </ul>
+                        <h4>Success Criteria:</h4>
+                        <ul>
+                            <li>Working prototype demonstrates core functionality</li>
+                            <li>Initial accuracy meets minimum thresholds</li>
+                            <li>User interface enables basic interactions</li>
+                            <li>Performance metrics show promise</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="roadmap-phase" onclick="togglePhase('phase3')">
+                    <h3>🚀 Phase 3: Pilot Deployment (Months 4-5)</h3>
+                    <p>Deploy to limited user group and measure results</p>
+                    <div id="phase3" class="framework-details">
+                        <h4>Key Activities:</h4>
+                        <ul>
+                            <li>Deploy to pilot user group (10-50 users)</li>
+                            <li>Implement monitoring and analytics</li>
+                            <li>Collect performance data</li>
+                            <li>Iterate based on real usage</li>
+                            <li>Document lessons learned</li>
+                        </ul>
+                        <h4>Success Criteria:</h4>
+                        <ul>
+                            <li>Measurable improvement in target metrics</li>
+                            <li>Positive user adoption and feedback</li>
+                            <li>System stability and performance</li>
+                            <li>Clear ROI demonstration</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="roadmap-phase" onclick="togglePhase('phase4')">
+                    <h3>📈 Phase 4: Scale and Optimize (Months 6+)</h3>
+                    <p>Expand deployment and continuously improve</p>
+                    <div id="phase4" class="framework-details">
+                        <h4>Key Activities:</h4>
+                        <ul>
+                            <li>Gradual rollout to full user base</li>
+                            <li>Advanced feature development</li>
+                            <li>Integration with existing systems</li>
+                            <li>Ongoing model improvement</li>
+                            <li>Change management and training</li>
+                        </ul>
+                        <h4>Success Criteria:</h4>
+                        <ul>
+                            <li>Full deployment achieves target adoption rates</li>
+                            <li>Sustained performance improvements</li>
+                            <li>Positive business impact measurement</li>
+                            <li>Platform ready for next use cases</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard" class="tab-content">
+            <div class="card">
+                <h2>📈 Success Dashboard</h2>
+                <p style="font-size: 1.1em; margin-bottom: 30px; color: #666;">
+                    Track your AI implementation progress and measure business impact
+                </p>
+
+                <div class="metric-dashboard">
+                    <div class="metric-card">
+                        <div class="metric-value" id="totalProjects">0</div>
+                        <div>Total Projects</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="activeProjects">0</div>
+                        <div>Active Projects</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="successRate">0%</div>
+                        <div>Success Rate</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="avgScore">0.0</div>
+                        <div>Avg. Framework Score</div>
+                    </div>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3>🎯 High-Priority Opportunities</h3>
+                        <div id="highPriorityList">
+                            <p>Complete use case evaluations to see high-priority opportunities</p>
+                        </div>
+                    </div>
+                    <div class="result-card warning">
+                        <h3>⚠️ Projects Needing Attention</h3>
+                        <div id="attentionList">
+                            <p>No projects currently need attention</p>
+                        </div>
+                    </div>
+                    <div class="result-card">
+                        <h3>📊 Recent Evaluations</h3>
+                        <div id="recentEvaluations">
+                            <p>No evaluations completed yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="export-section">
+                    <h3>📄 Export & Reports</h3>
+                    <button class="btn" onclick="exportDashboard()">Export Dashboard Report</button>
+                    <button class="btn btn-secondary" onclick="exportAllData()">Export All Data</button>
+                    <button class="btn" onclick="generateExecutiveSummary()">Generate Executive Summary</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize application state
+        let savedEvaluations = JSON.parse(localStorage.getItem('aiEvaluations') || '[]');
+        let currentEvaluation = {
+            dataScore: 5,
+            humanScore: 5,
+            measureScore: 5,
+            name: '',
+            department: '',
+            description: ''
+        };
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+
+            // Update dashboard when switching to it
+            if (tabName === 'dashboard') {
+                updateDashboard();
+            }
+        }
+
+        // Toggle framework details
+        function toggleDetails(detailsId) {
+            const details = document.getElementById(detailsId);
+            details.classList.toggle('show');
+        }
+
+        // Toggle roadmap phases
+        function togglePhase(phaseId) {
+            const phase = document.getElementById(phaseId);
+            phase.classList.toggle('show');
+        }
+
+        // Update scores and feedback
+        function updateScores() {
+            const dataScore = parseInt(document.getElementById('dataScore').value);
+            const humanScore = parseInt(document.getElementById('humanScore').value);
+            const measureScore = parseInt(document.getElementById('measureScore').value);
+            
+            // Update current evaluation
+            currentEvaluation.dataScore = dataScore;
+            currentEvaluation.humanScore = humanScore;
+            currentEvaluation.measureScore = measureScore;
+            
+            // Update displays
+            document.getElementById('dataScoreDisplay').textContent = `${dataScore}/10`;
+            document.getElementById('humanScoreDisplay').textContent = `${humanScore}/10`;
+            document.getElementById('measureScoreDisplay').textContent = `${measureScore}/10`;
+            
+            const totalScore = dataScore + humanScore + measureScore;
+            document.getElementById('totalScore').textContent = `${totalScore}/30`;
+            
+            // Update feedback
+            updateFeedback('dataFeedback', dataScore, 'data');
+            updateFeedback('humanFeedback', humanScore, 'human');
+            updateFeedback('measureFeedback', measureScore, 'measure');
+            updateRecommendation(totalScore, dataScore, humanScore, measureScore);
+        }
+
+        function updateFeedback(elementId, score, type) {
+            const element = document.getElementById(elementId);
+            let feedback = '';
+            
+            const feedbacks = {
+                data: {
+                    low: "Consider if you have enough quality data. Look for larger datasets or ways to enrich existing data.",
+                    medium: "Your data foundation is moderate. Consider data quality improvements and additional sources.",
+                    high: "Excellent data foundation! You have rich, abundant data perfect for AI success."
+                },
+                human: {
+                    low: "This may not be a significant enough pain point. Look for more critical problems that impact productivity.",
+                    medium: "This addresses a real problem. Consider if the impact is significant enough to justify AI investment.",
+                    high: "This solves a critical pain point! High-impact problems like this are perfect for AI solutions."
+                },
+                measure: {
+                    low: "Success metrics are unclear. Define specific, quantifiable measures before proceeding.",
+                    medium: "You have some measures in mind. Make them more specific and quantifiable.",
+                    high: "Crystal clear success metrics! You'll be able to prove ROI and business impact."
+                }
+            };
+            
+            if (score <= 3) feedback = feedbacks[type].low;
+            else if (score <= 6) feedback = feedbacks[type].medium;
+            else feedback = feedbacks[type].high;
+            
+            element.textContent = feedback;
+            
+            // Update styling based on score
+            if (score <= 3) {
+                element.style.background = '#f8d7da';
+                element.style.color = '#721c24';
+            } else if (score <= 6) {
+                element.style.background = '#fff3cd';
+                element.style.color = '#856404';
+            } else {
+                element.style.background = '#d4edda';
+                element.style.color = '#155724';
+            }
+        }
+
+        function updateRecommendation(totalScore, dataScore, humanScore, measureScore) {
+            const element = document.getElementById('recommendation');
+            const minScore = Math.min(dataScore, humanScore, measureScore);
+            
+            let recommendation = '';
+            let bgColor = '';
+            
+            if (minScore >= 7 && totalScore >= 21) {
+                recommendation = "🎉 STRONG CANDIDATE: This use case meets all criteria! Proceed with rapid prototyping. Expected success rate: 85%+";
+                bgColor = '#d4edda';
+            } else if (minScore >= 5 && totalScore >= 18) {
+                recommendation = "⚠️ MODERATE POTENTIAL: Address weak areas before proceeding. Focus on improving your lowest scoring pillar first.";
+                bgColor = '#fff3cd';
+            } else {
+                recommendation = "❌ HIGH RISK: This use case needs significant improvement. Consider alternative use cases or major changes to approach.";
+                bgColor = '#f8d7da';
+            }
+            
+            // Add specific guidance
+            if (dataScore < 7) recommendation += " Strengthen your data foundation.";
+            if (humanScore < 7) recommendation += " Find a more critical pain point.";
+            if (measureScore < 7) recommendation += " Define clearer success metrics.";
+            
+            element.textContent = recommendation;
+            element.style.background = bgColor;
+        }
+
+        // Save evaluation
+        function saveEvaluation() {
+            const name = document.getElementById('useCaseName').value || 'Unnamed Use Case';
+            const department = document.getElementById('department').value || 'Unspecified';
+            const description = document.getElementById('problemDescription').value || 'No description provided';
+            
+            const evaluation = {
+                ...currentEvaluation,
+                name,
+                department,
+                description,
+                timestamp: new Date().toISOString(),
+                totalScore: currentEvaluation.dataScore + currentEvaluation.humanScore + currentEvaluation.measureScore
+            };
+            
+            savedEvaluations.push(evaluation);
+            localStorage.setItem('aiEvaluations', JSON.stringify(savedEvaluations));
+            
+            alert('✅ Evaluation saved successfully!');
+            
+            // Clear form
+            document.getElementById('useCaseName').value = '';
+            document.getElementById('department').value = 'Select Department';
+            document.getElementById('problemDescription').value = '';
+        }
+
+        // Export functionality
+        function exportResults() {
+            const results = {
+                evaluation: currentEvaluation,
+                timestamp: new Date().toISOString(),
+                recommendation: document.getElementById('recommendation').textContent
+            };
+            
+            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ai-use-case-evaluation.json';
+            a.click();
+        }
+
+        function exportDashboard() {
+            const dashboard = {
+                summary: {
+                    totalProjects: savedEvaluations.length,
+                    averageScore: savedEvaluations.length > 0 ? 
+                        (savedEvaluations.reduce((sum, eval) => sum + eval.totalScore, 0) / savedEvaluations.length).toFixed(1) : 0,
+                    highPriorityCount: savedEvaluations.filter(eval => eval.totalScore >= 21).length
+                },
+                evaluations: savedEvaluations,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(dashboard, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ai-adoption-dashboard.json';
+            a.click();
+        }
+
+        function exportAllData() {
+            const allData = {
+                evaluations: savedEvaluations,
+                framework: {
+                    name: "Three-Pillar Success Framework",
+                    pillars: ["Data Foundation", "Human Amplification", "Measurability Standard"]
+                },
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'complete-ai-data-export.json';
+            a.click();
+        }
+
+        function generateExecutiveSummary() {
+            const highPriority = savedEvaluations.filter(eval => eval.totalScore >= 21);
+            const avgScore = savedEvaluations.length > 0 ? 
+                (savedEvaluations.reduce((sum, eval) => sum + eval.totalScore, 0) / savedEvaluations.length).toFixed(1) : 0;
+            
+            const summary = `
+AI ADOPTION EXECUTIVE SUMMARY
+Generated: ${new Date().toLocaleDateString()}
+
+OVERVIEW:
+• Total Use Cases Evaluated: ${savedEvaluations.length}
+• High-Priority Opportunities: ${highPriority.length}
+• Average Framework Score: ${avgScore}/30
+• Success Rate Projection: ${highPriority.length > 0 ? ((highPriority.length / savedEvaluations.length) * 100).toFixed(0) : 0}%
+
+HIGH-PRIORITY OPPORTUNITIES:
+${highPriority.map(eval => `• ${eval.name} (${eval.department}) - Score: ${eval.totalScore}/30`).join('\n') || '• None identified yet'}
+
+RECOMMENDATIONS:
+${highPriority.length > 0 ? 
+    '✅ Proceed with high-priority opportunities using 30-60 day pilot approach' : 
+    '❌ Focus on improving use case selection - current candidates need strengthening'}
+
+NEXT STEPS:
+1. Review high-priority opportunities with stakeholders
+2. Allocate pilot budgets for top-scoring use cases
+3. Define success metrics and measurement framework
+4. Begin rapid prototyping phase
+            `;
+            
+            const blob = new Blob([summary], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ai-executive-summary.txt';
+            a.click();
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            const totalProjects = savedEvaluations.length;
+            const activeProjects = savedEvaluations.filter(eval => eval.totalScore >= 18).length;
+            const highPriority = savedEvaluations.filter(eval => eval.totalScore >= 21);
+            const avgScore = totalProjects > 0 ? 
+                (savedEvaluations.reduce((sum, eval) => sum + eval.totalScore, 0) / totalProjects).toFixed(1) : 0;
+            const successRate = totalProjects > 0 ? ((highPriority.length / totalProjects) * 100).toFixed(0) : 0;
+            
+            document.getElementById('totalProjects').textContent = totalProjects;
+            document.getElementById('activeProjects').textContent = activeProjects;
+            document.getElementById('successRate').textContent = successRate + '%';
+            document.getElementById('avgScore').textContent = avgScore;
+            
+            // Update high priority list
+            const highPriorityList = document.getElementById('highPriorityList');
+            if (highPriority.length > 0) {
+                highPriorityList.innerHTML = highPriority.map(eval => 
+                    `<div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                        <strong>${eval.name}</strong> (${eval.department})<br>
+                        <small>Score: ${eval.totalScore}/30 | ${new Date(eval.timestamp).toLocaleDateString()}</small>
+                    </div>`
+                ).join('');
+            } else {
+                highPriorityList.innerHTML = '<p>Complete evaluations scoring 21+ to see high-priority opportunities</p>';
+            }
+            
+            // Update attention list
+            const needsAttention = savedEvaluations.filter(eval => eval.totalScore >= 15 && eval.totalScore < 21);
+            const attentionList = document.getElementById('attentionList');
+            if (needsAttention.length > 0) {
+                attentionList.innerHTML = needsAttention.map(eval => 
+                    `<div style="margin: 10px 0; padding: 10px; background: #fff3cd; border-radius: 6px;">
+                        <strong>${eval.name}</strong> - Score: ${eval.totalScore}/30<br>
+                        <small>Needs improvement in key areas</small>
+                    </div>`
+                ).join('');
+            } else {
+                attentionList.innerHTML = '<p>No projects currently need attention</p>';
+            }
+            
+            // Update recent evaluations
+            const recentEvaluations = document.getElementById('recentEvaluations');
+            const recent = savedEvaluations.slice(-3).reverse();
+            if (recent.length > 0) {
+                recentEvaluations.innerHTML = recent.map(eval => 
+                    `<div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 6px;">
+                        <strong>${eval.name}</strong><br>
+                        <small>Score: ${eval.totalScore}/30 | ${new Date(eval.timestamp).toLocaleDateString()}</small>
+                    </div>`
+                ).join('');
+            }
+        }
+
+        // Initialize the application
+        updateScores();
+        updateDashboard();
+    </script>
+</body>
+</html>
